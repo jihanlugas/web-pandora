@@ -12,7 +12,7 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Badminton'}</title>
+        <title>{process.env.APP_NAME}</title>
       </Head>
       <div className='p-4'>
         Home
