@@ -30,9 +30,6 @@ export declare interface CreateUser {
   noHp: string;
   username: string;
   passwd: string;
-  name: string;
-  description: string;
-  balance: number;
 }
 
 export declare interface UpdateUser {
@@ -42,10 +39,16 @@ export declare interface UpdateUser {
   username: string;
 }
 
-export declare interface PageUser extends Paging{
+export declare interface PageUser extends Paging {
   fullname: string;
   email: string;
   noHp: string;
   username: string;
   createBy: string;
+}
+
+export declare interface ChangePassword {
+  currentPasswd: string;
+  passwd: string;
+  confirmPasswd: string;
 }

@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { MdOutlineFilterList } from 'react-icons/md';
 import { VscTrash } from 'react-icons/vsc';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { BiFilterAlt, BiLayerPlus } from 'react-icons/bi';
+import { BiFilterAlt, BiLayerPlus, BiPlus } from 'react-icons/bi';
 import { RiPencilLine } from 'react-icons/ri';
 import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
@@ -173,25 +173,27 @@ const Index: NextPage<Props> = () => {
       },
       cell: props => props.getValue(),
     },
-    // {
-    //   id: 'id',
-    //   header: 'Action',
-    //   enableSorting: false,
-    //   cell: (props) => {
-    //     return (
-    //       <>
-    //         <div className='flex justify-end items-center'>
-    //           <Link href={{ pathname: '/admin/ktp/[ktpId]/edit', query: { ktpId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
-    //             <RiPencilLine className='' size={'1.2rem'} />
-    //           </Link>
-    //           <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDelete(props.row.original.id)}>
-    //             <VscTrash className='' size={'1.2rem'} />
-    //           </button>
-    //         </div>
-    //       </>
-    //     );
-    //   },
-    // }
+    {
+      id: 'id',
+      header: 'Action',
+      enableSorting: false,
+      cell: (props) => {
+        return (
+          <>
+            <div className='flex justify-end items-center'>
+              <Link href={{ pathname: '/admin/ktp/[ktpId]/edit', query: { ktpId: props.row.original.id } }} title='edit'>
+                <div className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded'>
+                  <RiPencilLine className='' size={'1.2rem'} />
+                </div>
+              </Link>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded' title='delete' onClick={() => toggleDelete(props.row.original.id)}>
+                <VscTrash className='' size={'1.2rem'} />
+              </button>
+            </div>
+          </>
+        );
+      },
+    }
   ];
 
   // const { isLoading, data, refetch } = useQuery(['ktp', pageRequestKtp], ({ queryKey }) => Api.get('/ktp/page', queryKey[1]), {});
@@ -283,14 +285,16 @@ const Index: NextPage<Props> = () => {
               </div>
               <div className='flex'>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilter()}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 bg-gray-100 hover:shadow' onClick={() => toggleFilter()}>
                     <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/admin/ktp/new')}>
-                    <IoAddOutline className='' size={'1.2em'} />
-                  </button>
+                  <Link href={{ pathname: '/admin/ktp/new' }}>
+                    <div className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 bg-gray-100 hover:shadow'>
+                      <BiPlus className='' size={'1.2em'} />
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
