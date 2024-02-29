@@ -6,6 +6,7 @@ export declare interface KtpView {
   nama: string;
   tempatLahir: string;
   tanggalLahir: string;
+  jenisKelamin: string;
   alamat: string;
   rtrw: string;
   kelurahanDesa: string;
@@ -32,6 +33,7 @@ export declare interface CreateKtp {
   nama: string;
   tempatLahir: string;
   tanggalLahir: string;
+  jenisKelamin: string;
   alamat: string;
   rtrw: string;
   kelurahanDesa: string;
@@ -49,6 +51,7 @@ export declare interface UpdateKtp {
   nama: string;
   tempatLahir: string;
   tanggalLahir: string;
+  jenisKelamin: string;
   alamat: string;
   rtrw: string;
   kelurahanDesa: string;
@@ -64,6 +67,7 @@ export declare interface UpdateKtp {
 export declare interface PageKtp extends Paging {
   nik: string;
   nama: string;
+  jenisKelamin: string;
   alamat: string;
   kelurahanDesa: string;
   kecamatan: string;

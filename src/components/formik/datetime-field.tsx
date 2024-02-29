@@ -8,7 +8,7 @@ interface Props extends React.HTMLProps<HTMLInputElement> {
   name: string
 }
 
-const DateField: NextPage<Props> = ({ label, name, ...props }) => {
+const DatetimeField: NextPage<Props> = ({ label, name, ...props }) => {
 
   return (
     <>
@@ -42,4 +42,4 @@ const DateField: NextPage<Props> = ({ label, name, ...props }) => {
   )
 }
 
-export default DateField;
+export default DatetimeField;

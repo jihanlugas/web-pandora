@@ -59,15 +59,16 @@ const Index: NextPage<Props> = () => {
     {
       id: 'fullname',
       accessorKey: 'fullname',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Fullname"}
-            </div>
-          </>
-        );
-      },
+      header: 'Fullname',
+      // header: (props) => {
+      //   return (
+      //     <>
+      //       <div className='whitespace-nowrap'>
+      //         {"Fullname"}
+      //       </div>
+      //     </>
+      //   );
+      // },
       cell: (props) => {
         return (
           <Link href={{ pathname: '/admin/user/[userId]', query: { userId: props.row.original.id } }} >
@@ -81,89 +82,41 @@ const Index: NextPage<Props> = () => {
     {
       id: 'email',
       accessorKey: 'email',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Email "}
-            </div>
-          </>
-        );
-      },
+      header: 'Email',
       cell: props => props.getValue(),
     },
     {
       id: 'no_hp',
       accessorKey: 'noHp',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"No. HP"}
-            </div>
-          </>
-        );
-      },
+      header: 'No. Hp',
       cell: props => displayPhoneNumber(props.getValue() as string),
     },
     {
       id: 'role',
       accessorKey: 'role',
       enableSorting: false,
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Role"}
-            </div>
-          </>
-        );
-      },
+      header: 'Role',
       cell: props => props.getValue(),
     },
     {
       id: 'is_active',
       accessorKey: 'isActive',
       enableSorting: false,
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Active"}
-            </div>
-          </>
-        );
-      },
+      header: 'Active',
       cell: props => displayActive(props.getValue() as boolean),
     },
     {
       id: 'pass_version',
       accessorKey: 'passVersion',
       enableSorting: false,
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Password Version"}
-            </div>
-          </>
-        );
-      },
+      header: 'Pass Version',
       cell: props => props.getValue(),
     },
     {
       id: 'create_name',
       accessorKey: 'createName',
       enableSorting: false,
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Create By"}
-            </div>
-          </>
-        );
-      },
+      header: 'Create By',
       cell: props => props.getValue(),
     },
     {

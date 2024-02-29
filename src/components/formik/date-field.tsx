@@ -1,41 +1,35 @@
-import DateTime, { DatetimepickerProps } from 'react-datetime';
 import { NextPage } from 'next';
 import moment from 'moment';
-import { Field, ErrorMessage } from 'formik';
+import { FastField, ErrorMessage } from 'formik';
+import React from 'react';
 
-interface Props extends DatetimepickerProps {
+interface Props extends React.HTMLProps<HTMLInputElement> {
   label?: string
   name: string
-  required?: boolean;
 }
 
-const DateField: NextPage<Props> = ({ label, name, required, ...props }) => {
-  const handleChange = (form, field, value) => {
-    form.setFieldValue(field.name, new Date(value))
-  }
+const DateField: NextPage<Props> = ({ label, name, ...props }) => {
+
   return (
     <>
       <div className=''>
         {label && (
           <div className={'mb-1'}>
             <span>{label}</span>
-            {required && <span className={'text-rose-600'}>{'*'}</span>}
+            {props.required && <span className={'text-rose-600'}>{'*'}</span>}
           </div>
         )}
-        <Field name={name} className={'w-full border-2 rounded'}>
-          {({ field, form }) => {
-            return (
-              <DateTime
-                className={'datetime w-full'}
-                value={new Date(field.value)}
-                onChange={(value) => handleChange(form, field, value)}
-                dateFormat={'DD MMM YYYY'}
-                timeFormat={'HH:mm'}
-                {...props}
-              />
-            )
-          }}
-        </Field>
+        <FastField
+          className={'w-full h-10 px-2 select-all'}
+          type={'date'}
+          name={name}
+          {...props}
+        />
+        {/* <input
+          type="datetime-local"
+          name=""
+          id=""
+        /> */}
         <ErrorMessage name={name}>
           {(msg) => {
             return (

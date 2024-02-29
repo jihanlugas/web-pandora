@@ -30,6 +30,8 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
   const refRows = useRef<HTMLDivElement>();
   const [rowsBar, setRowsBar] = useState(false);
 
+  const [columnVisibility, setColumnVisibility] = useState({})
+
   useEffect(() => {
     const checkIfClickedOutside = e => {
       // If the menu is open and the clicked target is not within the menu,
@@ -50,13 +52,11 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
   const table = useReactTable({
     columns: columnsMemo,
     data: dataMemo,
-    // state: {
-    //   sorting,
-    // },
-    // onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
   });
 
   const handleChangeLimit = (limit: number) => {
@@ -92,8 +92,27 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
     }
   }
 
+  // console.log("table.getAllLeafColumns() ", JSON.stringify(table.getAllLeafColumns()))
+  // console.log("table.getAllLeafColumns() ", table.getAllLeafColumns())
+
   return (
     <>
+      {/* {table.getAllLeafColumns().map(column => {
+        return (
+          <div key={column.id} className="px-1">
+            <label>
+              <input
+                {...{
+                  type: 'checkbox',
+                  checked: column.getIsVisible(),
+                  onChange: column.getToggleVisibilityHandler(),
+                }}
+              />{' '}
+              {column.columnDef.header as string}
+            </label>
+          </div>
+        )
+      })} */}
       <table className='w-full table-auto text-sm mb-2'>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (

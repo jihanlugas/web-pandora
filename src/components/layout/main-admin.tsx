@@ -64,7 +64,6 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
       });
     } else {
       let interval = 1000 * 60 * (process.env.REFRESH_TOKEN_MINUTES as unknown as number)
-      console.log(interval)
       setTimeout(() => {
         setRefreshInteval(refreshInterval + 1)
         mutateRefreshToken(null, {

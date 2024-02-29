@@ -49,6 +49,7 @@ const Index: NextPage<Props> = () => {
     sortOrder: null,
     nik: '',
     nama: '',
+    jenisKelamin: '',
     alamat: '',
     kelurahanDesa: '',
     kecamatan: '',
@@ -94,7 +95,13 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'ttl',
@@ -111,8 +118,8 @@ const Index: NextPage<Props> = () => {
       },
       cell: (props) => {
         return (
-            <div className='w-full duration-300 hover:text-primary-500'>
-              {props.row.original.tempatLahir + ', ' + displayDate(props.row.original.tanggalLahir)}
+            <div className='w-full'>
+              {props.row.original.tempatLahir + ', ' + displayDate(props.row.original.tanggalLahir, 'DD MMMM YYYY')}
             </div>
         )
       },
@@ -129,7 +136,13 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'kabupaten_kota',
@@ -143,7 +156,13 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'kecamatan',
@@ -157,7 +176,13 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'kelurahan_desa',
@@ -171,7 +196,33 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'create_name',
+      accessorKey: 'createName',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Create Name"}
+            </div>
+          </>
+        );
+      },
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'id',

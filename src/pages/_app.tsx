@@ -34,7 +34,7 @@ const MyApp: NextPage<AppLayoutProps> = ({ Component, pageProps }) => {
             <Component {...pageProps} />
           </Layout>
         </LoginContextProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </>
   )
