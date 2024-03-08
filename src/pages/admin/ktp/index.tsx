@@ -4,14 +4,14 @@ import DateField from '@/components/formik/date-field';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
-import MainKtp from '@/components/layout/main-admin';
+import MainAdmin from '@/components/layout/main-admin';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
 import Link from 'next/link';
 import { MdOutlineFilterList } from 'react-icons/md';
 import { VscTrash } from 'react-icons/vsc';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { BiFilterAlt, BiLayerPlus, BiPlus } from 'react-icons/bi';
+import { BiDetail, BiFilterAlt, BiLayerPlus, BiPlus } from 'react-icons/bi';
 import { RiPencilLine } from 'react-icons/ri';
 import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
@@ -232,6 +232,11 @@ const Index: NextPage<Props> = () => {
         return (
           <>
             <div className='flex justify-end items-center'>
+              <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: props.row.original.id } }} title='edit'>
+                <div className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded'>
+                  <BiDetail className='' size={'1.2rem'} />
+                </div>
+              </Link>
               <Link href={{ pathname: '/admin/ktp/[ktpId]/edit', query: { ktpId: props.row.original.id } }} title='edit'>
                 <div className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded'>
                   <RiPencilLine className='' size={'1.2rem'} />
@@ -366,6 +371,6 @@ const Index: NextPage<Props> = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainKtp;
+(Index as PageWithLayoutType).layout = MainAdmin;
 
 export default Index;

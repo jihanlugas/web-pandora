@@ -1,4 +1,3 @@
-import { ListData } from '@/types/data';
 import { Field, ErrorMessage } from 'formik';
 import { NextPage } from 'next';
 import React from 'react';
@@ -10,7 +9,7 @@ import React from 'react';
 
 interface Props extends React.HTMLProps<HTMLSelectElement> {
 	label?: string;
-	items: ListData[];
+	items: Array<any>;
 	name: string;
 	required?: boolean;
 	placeholder?: string;

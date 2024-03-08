@@ -1,25 +1,25 @@
-import MainAdmin from '@/components/layout/main-admin';
-import { Api } from '@/lib/api';
-import { CreateKtp } from '@/types/ktp';
-import PageWithLayoutType from '@/types/layout';
-import { useMutation } from '@tanstack/react-query';
-import { Form, Formik, FormikValues } from 'formik';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { NextPage } from 'next/types';
+import MainAdmin from "@/components/layout/main-admin"
+import { Api } from "@/lib/api"
+import { KtpView, UpdateKtp } from "@/types/ktp"
+import PageWithLayoutType from "@/types/layout"
+import { useMutation } from "@tanstack/react-query"
+import { Form, Formik, FormikValues } from "formik"
+import Head from "next/head"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import { GetServerSideProps, NextPage } from "next/types"
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import * as Yup from 'yup';
 import notif from '@/utils/notif';
-import TextField from '@/components/formik/text-field';
-import TextAreaField from '@/components/formik/text-area-field';
-import ButtonSubmit from '@/components/formik/button-submit';
-import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
-import DateField from '@/components/formik/date-field';
-import DropdownField from '@/components/formik/dropdown-field';
-import { GENDER, STATUS_PERKAWINAN } from '@/utils/constant';
-
+import TextField from "@/components/formik/text-field"
+import DateField from "@/components/formik/date-field"
+import DropdownField from "@/components/formik/dropdown-field"
+import { GENDER, STATUS_PERKAWINAN } from "@/utils/constant"
+import ButtonSubmit from "@/components/formik/button-submit"
+import { displayDateForm } from "@/utils/formater"
 
 type Props = {
+  ktp: KtpView
 }
 
 const schema = Yup.object().shape({
@@ -39,30 +39,29 @@ const schema = Yup.object().shape({
   kewarganegaraan: Yup.string().required("Required field"),
 });
 
-const New: NextPage<Props> = () => {
+const Edit: NextPage<Props> = ({ ktp }) => {
   const router = useRouter();
-
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['create-ktp'],
-    mutationFn: (val: FormikValues) => Api.post('/ktp', val),
+    mutationKey: ['update-ktp', ktp.id],
+    mutationFn: (val: FormikValues) => Api.put('/ktp/' + ktp.id, val),
   });
 
-  const initFormikValue: CreateKtp = {
-    nik: "",
-    nama: "",
-    tempatLahir: "",
-    tanggalLahir: "",
-    jenisKelamin: "",
-    alamat: "",
-    rtrw: "",
-    kelurahanDesa: "",
-    kecamatan: "",
-    kabupatenKota: "",
-    provinsi: "",
-    pekerjaan: "",
-    statusPerkawinan: "",
-    kewarganegaraan: "",
-    berlakuHingga: null,
+  const initFormikValue: UpdateKtp = {
+    nik: ktp.nik,
+    nama: ktp.nama,
+    tempatLahir: ktp.tempatLahir,
+    tanggalLahir: displayDateForm(ktp.tanggalLahir),
+    jenisKelamin: ktp.jenisKelamin,
+    alamat: ktp.alamat,
+    rtrw: ktp.rtrw,
+    kelurahanDesa: ktp.kelurahanDesa,
+    kecamatan: ktp.kecamatan,
+    kabupatenKota: ktp.kabupatenKota,
+    provinsi: ktp.provinsi,
+    pekerjaan: ktp.pekerjaan,
+    statusPerkawinan: ktp.statusPerkawinan,
+    kewarganegaraan: ktp.kewarganegaraan,
+    berlakuHingga: ktp.berlakuHingga,
   };
 
   const handleSubmit = (values: FormikValues, setErrors) => {
@@ -91,27 +90,33 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Ktp New'}</title>
+        <title>{'KTP - ' + ktp.nama}</title>
       </Head>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
               <Link href={'/admin/ktp'}>
-                <div className='mr-4 hover:text-primary-500'>{'Ktp'}</div>
+                <div className='mr-4 hover:text-primary-500'>{'KTP'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <div className='mr-4'>{'New'}</div>
+              <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
+                <div className='mr-4 hover:text-primary-500'>{ktp.nama}</div>
+              </Link>
+              <div className='mr-4'>
+                <BsChevronRight className={''} size={'1.2rem'} />
+              </div>
+              <div className='mr-4'>{"Edit"}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/admin/ktp'}>
+              <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
               </Link>
-              <div className='mr-4'>{'New'}</div>
+              <div className='mr-4'>{"Edit"}</div>
             </div>
           </div>
         </div>
@@ -258,7 +263,7 @@ const New: NextPage<Props> = () => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Create'}
+                          label={'Save'}
                           disabled={isPending}
                           loading={isPending}
                         />
@@ -271,13 +276,27 @@ const New: NextPage<Props> = () => {
           </div>
         </div>
       </div>
-
     </>
   )
 }
 
+(Edit as PageWithLayoutType).layout = MainAdmin;
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { ktpId } = context.query;
+  const ktp = await Api.get('/ktp/' + ktpId).then(res => res);
 
-(New as PageWithLayoutType).layout = MainAdmin;
+  if (ktp.status) {
+    return {
+      props: {
+        ktp: ktp.payload,
+      }
+    };
+  } else {
+    return {
+      notFound: true
+    };
+  }
+};
 
-export default New;
+export default Edit;
