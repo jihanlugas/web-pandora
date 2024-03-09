@@ -172,6 +172,7 @@ const New: NextPage<Props> = () => {
                           name={'jenisKelamin'}
                           placeholder={'Pilih jenis kelamin'}
                           items={Object.values(GENDER)}
+                          required={true}
                         />
                       </div>
                       <div className="mb-4">
