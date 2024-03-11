@@ -50,11 +50,13 @@ const Index: NextPage<Props> = () => {
     nik: '',
     nama: '',
     jenisKelamin: '',
+    provinceId: '',
+    regencyId: '',
+    districtId: '',
+    villageId: '',
     alamat: '',
-    kelurahanDesa: '',
-    kecamatan: '',
-    kabupatenKota: '',
-    provinsi: '',
+    rtrw: '',
+    pekerjaan: '',
     statusPerkawinan: '',
     kewarganegaraan: '',
     createBy: '',
@@ -125,8 +127,28 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'provinsi',
-      accessorKey: 'provinsi',
+      id: 'province_name',
+      accessorKey: 'provinceName',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Provinsi"}
+            </div>
+          </>
+        );
+      },
+      cell: (props) => {
+        return (
+          <div className='w-full uppercase'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'regency_name',
+      accessorKey: 'regencyName',
       header: (props) => {
         return (
           <>
@@ -145,28 +167,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'kabupaten_kota',
-      accessorKey: 'kabupatenKota',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Kabutapen/Kota"}
-            </div>
-          </>
-        );
-      },
-      cell: (props) => {
-        return (
-          <div className='w-full uppercase'>
-            {props.getValue() as string}
-          </div>
-        )
-      },
-    },
-    {
-      id: 'kecamatan',
-      accessorKey: 'kecamatan',
+      id: 'district_name',
+      accessorKey: 'districtName',
       header: (props) => {
         return (
           <>
@@ -185,8 +187,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'kelurahan_desa',
-      accessorKey: 'kelurahanDesa',
+      id: 'village_name',
+      accessorKey: 'villageName',
       header: (props) => {
         return (
           <>

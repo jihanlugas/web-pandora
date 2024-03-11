@@ -7,12 +7,12 @@ export declare interface KtpView {
   tempatLahir: string;
   tanggalLahir: string;
   jenisKelamin: string;
+  provinceId: string;
+  regencyId: string;
+  districtId: string;
+  villageId: string;
   alamat: string;
   rtrw: string;
-  kelurahanDesa: string;
-  kecamatan: string;
-  kabupatenKota: string;
-  provinsi: string;
   pekerjaan: string;
   statusPerkawinan: string;
   kewarganegaraan: string;
@@ -25,6 +25,10 @@ export declare interface KtpView {
   deleteDt?: string;
   createName: string;
   updateName: string;
+  provinceName: string;
+  regencyName: string;
+  districtName: string;
+  villageName: string;
 }
 
 
@@ -34,12 +38,12 @@ export declare interface CreateKtp {
   tempatLahir: string;
   tanggalLahir: string;
   jenisKelamin: string;
+  provinceId: string;
+  regencyId: string;
+  districtId: string;
+  villageId: string;
   alamat: string;
   rtrw: string;
-  kelurahanDesa: string;
-  kecamatan: string;
-  kabupatenKota: string;
-  provinsi: string;
   pekerjaan: string;
   statusPerkawinan: string;
   kewarganegaraan: string;
@@ -52,12 +56,12 @@ export declare interface UpdateKtp {
   tempatLahir: string;
   tanggalLahir: string;
   jenisKelamin: string;
+  provinceId: string;
+  regencyId: string;
+  districtId: string;
+  villageId: string;
   alamat: string;
   rtrw: string;
-  kelurahanDesa: string;
-  kecamatan: string;
-  kabupatenKota: string;
-  provinsi: string;
   pekerjaan: string;
   statusPerkawinan: string;
   kewarganegaraan: string;
@@ -68,11 +72,13 @@ export declare interface PageKtp extends Paging {
   nik: string;
   nama: string;
   jenisKelamin: string;
+  provinceId: string;
+  regencyId: string;
+  districtId: string;
+  villageId: string;
   alamat: string;
-  kelurahanDesa: string;
-  kecamatan: string;
-  kabupatenKota: string;
-  provinsi: string;
+  rtrw: string;
+  pekerjaan: string;
   statusPerkawinan: string;
   kewarganegaraan: string;
   createBy: string;

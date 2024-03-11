@@ -29,7 +29,7 @@ const DropdownField: NextPage<Props> = ({ label, name, items, required, placehol
 				</div>
 			)}
 			<Field
-				className={'w-full border-2 rounded h-10 px-2 bg-white'}
+				className={'w-full h-10 px-2 '}
 				name={name}
 				as={'select'}
 				{...props}
