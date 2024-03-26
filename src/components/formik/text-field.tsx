@@ -7,7 +7,7 @@ interface Props extends React.HTMLProps<HTMLInputElement> {
 	type: string;
 }
 
-const TextField: NextPage<Props> = ({ name, type, ...props }) => {
+const TextField: NextPage<Props> = ({ name, type, className='', ...props }) => {
 	return (
 		<div className={'flex flex-col w-full'}>
 			{props.label && (
@@ -17,7 +17,7 @@ const TextField: NextPage<Props> = ({ name, type, ...props }) => {
 				</div>
 			)}
 			<FastField
-				className={'w-full h-10 px-2 select-all'}
+				className={'w-full h-10 px-2 select-all ' + className}
 				type={type}
 				name={name}
 				onWheel={event => event.currentTarget.blur()}

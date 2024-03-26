@@ -290,6 +290,7 @@ const New: NextPage<Props> = () => {
                           name={'nama'}
                           type={'text'}
                           placeholder={'Nama'}
+                          className={'uppercase'}
                           required
                         />
                       </div>
@@ -299,6 +300,7 @@ const New: NextPage<Props> = () => {
                           name={'tempatLahir'}
                           type={'text'}
                           placeholder={'Tempat Lahir'}
+                          className={'uppercase'}
                           required
                         />
                       </div>
@@ -371,6 +373,7 @@ const New: NextPage<Props> = () => {
                           label={'Alamat'}
                           name={'alamat'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Alamat'}
                           required
                         />
@@ -380,6 +383,7 @@ const New: NextPage<Props> = () => {
                           label={'RT/RW'}
                           name={'rtrw'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'RT/RW'}
                           required
                         />
@@ -389,6 +393,7 @@ const New: NextPage<Props> = () => {
                           label={'Pekerjaan'}
                           name={'pekerjaan'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Pekerjaan'}
                           required
                         />
@@ -408,6 +413,7 @@ const New: NextPage<Props> = () => {
                           label={'Kewarganegaraan'}
                           name={'kewarganegaraan'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Kewarganegaraan'}
                           required
                         />
