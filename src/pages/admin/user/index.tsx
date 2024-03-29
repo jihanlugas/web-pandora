@@ -4,7 +4,7 @@ import DateField from '@/components/formik/date-field';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
-import MainAdmin from '@/components/layout/main-admin';
+import MainAuth from '@/components/layout/main-auth';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
 import Link from 'next/link';
@@ -72,7 +72,7 @@ const Index: NextPage<Props> = () => {
       cell: (props) => {
         return (
           <Link href={{ pathname: '/admin/user/[userId]', query: { userId: props.row.original.id } }} >
-            <div className='w-full duration-300 hover:text-primary-500'>
+            <div className='w-full duration-300 hover:text-primary-500 capitalize'>
               {props.getValue() as string}
             </div>
           </Link>
@@ -262,6 +262,6 @@ const Index: NextPage<Props> = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainAdmin;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;

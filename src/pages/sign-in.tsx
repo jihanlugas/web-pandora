@@ -13,7 +13,7 @@ import { Api } from '@/lib/api';
 import notif from '@/utils/notif';
 import PageWithLayoutType from '@/types/layout';
 import Main from '@/components/layout/main';
-import { USER_TYPE_ADMIN } from '@/utils/constant';
+import { USER_ROLE_ADMIN } from '@/utils/constant';
 
 type Props = {
 
@@ -47,7 +47,7 @@ const SingIn: NextPage<Props> = () => {
             // if (router.query.redirect) {
             //   router.push(router.query.redirect as string);
             // } else {
-            if (res.payload.userLogin?.role === USER_TYPE_ADMIN) {
+            if (res.payload.userLogin?.role === USER_ROLE_ADMIN) {
               router.push('/admin/user');
             } else {
               router.push('/ktp');

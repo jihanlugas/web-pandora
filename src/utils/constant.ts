@@ -1,4 +1,5 @@
-export const USER_TYPE_ADMIN = 'ADMIN'
+export const USER_ROLE_ADMIN = 'ADMIN'
+export const USER_ROLE_USER = 'USER'
 
 export const GENDER = {
   'MALE': {
@@ -29,3 +30,34 @@ export const STATUS_PERKAWINAN = {
     label: 'Cerai Mati',
   },
 };
+
+export const MENU_ADMIN = [
+  {
+    name: 'Overview',
+    icon: 'BiAbacus',
+    path: '/overview',
+  },
+  {
+    name: 'User',
+    icon: 'BiAbacus',
+    path: '/admin/user',
+  },
+  {
+    name: 'Ktp',
+    icon: 'BiAbacus',
+    path: '/ktp',
+  },
+];
+
+export const MENU_USER = [
+  {
+    name: 'Overview',
+    icon: 'BiAbacus',
+    path: '/overview',
+  },
+  {
+    name: 'Ktp',
+    icon: 'BiAbacus',
+    path: '/ktp',
+  },
+];

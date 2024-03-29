@@ -1,4 +1,4 @@
-import MainAdmin from "@/components/layout/main-admin"
+import MainAuth from "@/components/layout/main"
 import { Api } from "@/lib/api"
 import { KtpView } from "@/types/ktp"
 import PageWithLayoutType from "@/types/layout"
@@ -22,7 +22,7 @@ const Index: NextPage<Props> = ({ ktp }) => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/admin/ktp'}>
+              <Link href={'/ktp'}>
                 <div className='mr-4 hover:text-primary-500'>{'KTP'}</div>
               </Link>
               <div className='mr-4'>
@@ -31,7 +31,7 @@ const Index: NextPage<Props> = ({ ktp }) => {
               <div className='mr-4'>{ktp.nama}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/admin/ktp'}>
+              <Link href={'/ktp'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -47,12 +47,12 @@ const Index: NextPage<Props> = ({ ktp }) => {
           <div className="">{ktp.tempatLahir}</div>
           <div className="">{ktp.tanggalLahir}</div>
           <div className="">{ktp.jenisKelamin}</div>
+          <div className="">{ktp.provinceName}</div>
+          <div className="">{ktp.districtName}</div>
+          <div className="">{ktp.regencyName}</div>
+          <div className="">{ktp.villageName}</div>
           <div className="">{ktp.alamat}</div>
           <div className="">{ktp.rtrw}</div>
-          <div className="">{ktp.kelurahanDesa}</div>
-          <div className="">{ktp.kecamatan}</div>
-          <div className="">{ktp.kabupatenKota}</div>
-          <div className="">{ktp.provinsi}</div>
           <div className="">{ktp.pekerjaan}</div>
           <div className="">{ktp.statusPerkawinan}</div>
           <div className="">{ktp.kewarganegaraan}</div>
@@ -71,7 +71,7 @@ const Index: NextPage<Props> = ({ ktp }) => {
   )
 }
 
-(Index as PageWithLayoutType).layout = MainAdmin;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { ktpId } = context.query;

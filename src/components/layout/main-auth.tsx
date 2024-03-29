@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/header';
-import SidebarAdmin from '@/components/layout/sidebar-admin';
+import Sidebar from '@/components/layout/sidebar';
 import { Api } from '@/lib/api';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { AiOutlineLoading } from 'react-icons/ai'
 import Notif from '@/utils/notif';
-import { USER_TYPE_ADMIN } from '@/utils/constant';
-import SidebarUser from './sidebar-user';
+import { MENU_ADMIN, MENU_USER, USER_ROLE_ADMIN, USER_ROLE_USER } from '@/utils/constant';
 import LoginContext from '@/stores/login-provider';
-
 
 
 type Props = {
@@ -27,7 +25,7 @@ const Loading: React.FC = () => {
   )
 }
 
-const MainUser: React.FC<Props> = ({ children }) => {
+const MainAuth: React.FC<Props> = ({ children }) => {
   const [sidebar, setSidebar] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(false);
 
@@ -54,7 +52,18 @@ const MainUser: React.FC<Props> = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    if (login) {
+      if (login.role === USER_ROLE_USER) {
+        const menuIndex = MENU_USER.findIndex((menu) => router.pathname.indexOf(menu.path))
+        if (menuIndex === -1) {
+          router.push('/overview')
+        }
+      }
+    }
 
+    onClickOverlay(false);
+  }, [router.pathname]);
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -123,10 +132,10 @@ const MainUser: React.FC<Props> = ({ children }) => {
         <meta name="theme-color" content={'currentColor'} />
       </Head>
       <main className={''}>
-        {init ? (
+        {init && login ? (
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} />
-            <SidebarUser sidebar={sidebar} onClickOverlay={onClickOverlay} />
+            <Sidebar role={login.role} sidebar={sidebar} onClickOverlay={onClickOverlay} />
             <div className={`hidden md:block duration-300 ease-in-out pt-16 overflow-y-auto`}>
               <div className="mainContent">
                 {children}
@@ -137,6 +146,7 @@ const MainUser: React.FC<Props> = ({ children }) => {
                 {children}
               </div>
             </div>
+
           </>
         ) : (
           <>
@@ -148,4 +158,4 @@ const MainUser: React.FC<Props> = ({ children }) => {
   );
 };
 
-export default MainUser;
+export default MainAuth;

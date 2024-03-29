@@ -5,7 +5,7 @@ import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
 import Head from 'next/head';
 import { Store } from 'react-notifications-component';
-import MainUser from '@/components/layout/main-user';
+import MainAuth from '@/components/layout/main-auth';
 import Notif from '@/utils/notif';
 
 const Index = () => {
@@ -21,6 +21,6 @@ const Index = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainUser;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;

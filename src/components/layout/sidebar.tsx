@@ -7,10 +7,10 @@ import { FiEdit, FiUsers } from 'react-icons/fi';
 import { MdHowToVote } from 'react-icons/md';
 import { IoFileTrayStackedOutline } from 'react-icons/io5';
 import { VscOpenPreview } from 'react-icons/vsc';
-
-
+import { MENU_ADMIN, MENU_USER, USER_ROLE_ADMIN } from '@/utils/constant';
 
 interface Props {
+  role: string,
   sidebar: boolean,
   onClickOverlay: (boolean?) => void,
 }
@@ -27,23 +27,11 @@ const icons = {
   VscOpenPreview,
 };
 
-const defaultMenu = [
-  {
-    name: 'Ktp',
-    icon: 'BiAbacus',
-    path: '/ktp',
-  },
-];
-
-const SidebarUser: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
+const Sidebar: React.FC<Props> = ({ role, sidebar, onClickOverlay }) => {
 
   const router = useRouter();
 
-  const [menu, setMenu] = useState(defaultMenu)
-
-  useEffect(() => {
-    onClickOverlay(false);
-  }, [router.pathname]);
+  const [menu, setMenu] = useState(role === USER_ROLE_ADMIN ? MENU_ADMIN : MENU_USER);
 
   const Menu = ({ name, icon, path }) => {
     const isSelected = router.pathname.indexOf(path) !== -1;
@@ -96,4 +84,4 @@ const SidebarUser: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
   );
 };
 
-export default SidebarUser;
+export default Sidebar;

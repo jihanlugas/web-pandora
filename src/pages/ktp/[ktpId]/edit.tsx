@@ -1,8 +1,8 @@
-import MainAdmin from "@/components/layout/main-admin"
+import MainAuth from "@/components/layout/main"
 import { Api } from "@/lib/api"
 import { KtpView, UpdateKtp } from "@/types/ktp"
 import PageWithLayoutType from "@/types/layout"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Form, Formik, FormikValues } from "formik"
 import Head from "next/head"
 import Link from "next/link"
@@ -17,23 +17,28 @@ import DropdownField from "@/components/formik/dropdown-field"
 import { GENDER, STATUS_PERKAWINAN } from "@/utils/constant"
 import ButtonSubmit from "@/components/formik/button-submit"
 import { displayDateForm } from "@/utils/formater"
+import { ListProvince, ProvinceView } from "@/types/province"
+import { ListRegency, RegencyView } from "@/types/regency"
+import { DistrictView, ListDistrict } from "@/types/district"
+import { ListVillage, VillageView } from "@/types/village"
+import { useEffect, useState } from "react"
 
 type Props = {
   ktp: KtpView
 }
 
 const schema = Yup.object().shape({
-  nik: Yup.string().required("Required field"),
+  nik: Yup.number().typeError('Must be a number').required("Required field"),
   nama: Yup.string().required("Required field"),
   tempatLahir: Yup.string().required("Required field"),
   tanggalLahir: Yup.date().required("Required field"),
   jenisKelamin: Yup.string().required("Required field"),
+  provinceId: Yup.string().required("Required field"),
+  regencyId: Yup.string().required("Required field"),
+  districtId: Yup.string().required("Required field"),
+  villageId: Yup.string().required("Required field"),
   alamat: Yup.string().required("Required field"),
   rtrw: Yup.string().required("Required field"),
-  kelurahanDesa: Yup.string().required("Required field"),
-  kecamatan: Yup.string().required("Required field"),
-  kabupatenKota: Yup.string().required("Required field"),
-  provinsi: Yup.string().required("Required field"),
   pekerjaan: Yup.string().required("Required field"),
   statusPerkawinan: Yup.string().required("Required field"),
   kewarganegaraan: Yup.string().required("Required field"),
@@ -41,10 +46,11 @@ const schema = Yup.object().shape({
 
 const Edit: NextPage<Props> = ({ ktp }) => {
   const router = useRouter();
-  const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['update-ktp', ktp.id],
-    mutationFn: (val: FormikValues) => Api.put('/ktp/' + ktp.id, val),
-  });
+
+  const [listProvince, setListProvince] = useState<ProvinceView[]>([]);
+  const [listRegency, setListRegency] = useState<RegencyView[]>([]);
+  const [listDistrict, setListDistrict] = useState<DistrictView[]>([]);
+  const [listVillage, setListVillage] = useState<VillageView[]>([]);
 
   const initFormikValue: UpdateKtp = {
     nik: ktp.nik,
@@ -52,17 +58,68 @@ const Edit: NextPage<Props> = ({ ktp }) => {
     tempatLahir: ktp.tempatLahir,
     tanggalLahir: displayDateForm(ktp.tanggalLahir),
     jenisKelamin: ktp.jenisKelamin,
+    provinceId: ktp.provinceId,
+    regencyId: ktp.regencyId,
+    districtId: ktp.districtId,
+    villageId: ktp.villageId,
     alamat: ktp.alamat,
     rtrw: ktp.rtrw,
-    kelurahanDesa: ktp.kelurahanDesa,
-    kecamatan: ktp.kecamatan,
-    kabupatenKota: ktp.kabupatenKota,
-    provinsi: ktp.provinsi,
     pekerjaan: ktp.pekerjaan,
     statusPerkawinan: ktp.statusPerkawinan,
     kewarganegaraan: ktp.kewarganegaraan,
     berlakuHingga: ktp.berlakuHingga,
   };
+
+  const [listRequestProvince, setListRequestProvince] = useState<ListProvince>({
+    limit: 100,
+    provinceName: '',
+  });
+
+  const [listRequestRegency, setListRequestRegency] = useState<ListRegency>({
+    limit: 100,
+    regencyName: '',
+    provinceId: ktp.provinceId,
+  });
+
+  const [listRequestDistrict, setListRequestDistrict] = useState<ListDistrict>({
+    limit: 100,
+    districtName: '',
+    provinceId: ktp.provinceId,
+    regencyId: ktp.regencyId,
+  });
+
+  const [listRequestVillage, setListRequestVillage] = useState<ListVillage>({
+    limit: 100,
+    villageName: '',
+    provinceId: ktp.provinceId,
+    regencyId: ktp.regencyId,
+    districtId: ktp.districtId,
+  });
+
+  const { mutate: mutateSubmit, isPending } = useMutation({
+    mutationKey: ['update-ktp', ktp.id],
+    mutationFn: (val: FormikValues) => Api.put('/ktp/' + ktp.id, val),
+  });
+
+  const { isLoading: isLoadingListProvince, data: dataListProvince, refetch: refetchListProvince } = useQuery({
+    queryKey: ['list-province', listRequestProvince],
+    queryFn: ({ queryKey }) => Api.get('/province/list', queryKey[1]),
+  });
+
+  const { isLoading: isLoadingListRegency, data: dataListRegency, refetch: refetchListRegency } = useQuery({
+    queryKey: ['list-regency', listRequestRegency],
+    queryFn: ({ queryKey }) => Api.get('/regency/list', queryKey[1]),
+  });
+
+  const { isLoading: isLoadingListDistrict, data: dataListDistrict, refetch: refetchListDistrict } = useQuery({
+    queryKey: ['list-district', listRequestDistrict],
+    queryFn: ({ queryKey }) => Api.get('/district/list', queryKey[1]),
+  });
+
+  const { isLoading: isLoadingListVillage, data: dataListVillage, refetch: refetchListVillage } = useQuery({
+    queryKey: ['list-village', listRequestVillage],
+    queryFn: ({ queryKey }) => Api.get('/village/list', queryKey[1]),
+  });
 
   const handleSubmit = (values: FormikValues, setErrors) => {
     values.tanggalLahir = new Date(values.tanggalLahir);
@@ -71,7 +128,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push('/admin/ktp');
+            router.push('/ktp');
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -87,6 +144,89 @@ const Edit: NextPage<Props> = ({ ktp }) => {
     });
   };
 
+  const handleChangeProvince = (e, setFieldValue) => {
+    setListRequestRegency({
+      ...listRequestRegency,
+      provinceId: e.target.value,
+    });
+    setListRequestDistrict({
+      ...listRequestDistrict,
+      provinceId: e.target.value,
+      regencyId: '--',
+    });
+    setListRequestVillage({
+      ...listRequestVillage,
+      provinceId: e.target.value,
+      regencyId: '--',
+      districtId: '--',
+    });
+
+    setFieldValue('provinceId', e.target.value);
+    setFieldValue('regencyId', '');
+    setFieldValue('districtId', '');
+    setFieldValue('villageId', '');
+
+    refetchListRegency();
+    refetchListDistrict();
+    refetchListVillage();
+  }
+
+  const handleChangeRegency = (e, setFieldValue) => {
+    setListRequestDistrict({
+      ...listRequestDistrict,
+      regencyId: e.target.value,
+    });
+    setListRequestVillage({
+      ...listRequestVillage,
+      regencyId: e.target.value,
+      districtId: '--',
+    });
+
+    setFieldValue('regencyId', e.target.value);
+    setFieldValue('districtId', '');
+    setFieldValue('villageId', '');
+
+    refetchListDistrict();
+    refetchListVillage();
+  }
+
+  const handleChangeDistrict = (e, setFieldValue) => {
+    setListRequestVillage({
+      ...listRequestVillage,
+      districtId: e.target.value,
+    });
+
+    setFieldValue('districtId', e.target.value);
+    setFieldValue('villageId', '');
+
+    refetchListVillage();
+  }
+
+
+  useEffect(() => {
+    if (dataListProvince && dataListProvince.status) {
+      setListProvince(dataListProvince.payload);
+    }
+  }, [dataListProvince]);
+
+  useEffect(() => {
+    if (dataListRegency && dataListRegency.status) {
+      setListRegency(dataListRegency.payload);
+    }
+  }, [dataListRegency]);
+
+  useEffect(() => {
+    if (dataListDistrict && dataListDistrict.status) {
+      setListDistrict(dataListDistrict.payload);
+    }
+  }, [dataListDistrict]);
+
+  useEffect(() => {
+    if (dataListVillage && dataListVillage.status) {
+      setListVillage(dataListVillage.payload);
+    }
+  }, [dataListVillage]);
+
   return (
     <>
       <Head>
@@ -96,13 +236,13 @@ const Edit: NextPage<Props> = ({ ktp }) => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/admin/ktp'}>
+              <Link href={'/ktp'}>
                 <div className='mr-4 hover:text-primary-500'>{'KTP'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
+              <Link href={{ pathname: '/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
                 <div className='mr-4 hover:text-primary-500'>{ktp.nama}</div>
               </Link>
               <div className='mr-4'>
@@ -111,7 +251,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
               <div className='mr-4'>{"Edit"}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
+              <Link href={{ pathname: '/ktp/[ktpId]', query: { ktpId: ktp.id } }}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -133,7 +273,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
             >
               {({ values, errors, setFieldValue }) => {
                 return (
-                  <Form>
+                  <Form noValidate={true}>
                     <div className={'w-full max-w-xl'}>
                       <div className="mb-4">
                         <TextField
@@ -151,6 +291,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           name={'nama'}
                           type={'text'}
                           placeholder={'Nama'}
+                          className={'uppercase'}
                           required
                         />
                       </div>
@@ -160,6 +301,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           name={'tempatLahir'}
                           type={'text'}
                           placeholder={'Tempat Lahir'}
+                          className={'uppercase'}
                           required
                         />
                       </div>
@@ -177,6 +319,54 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           name={'jenisKelamin'}
                           placeholder={'Pilih jenis kelamin'}
                           items={Object.values(GENDER)}
+                          required={true}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Provinsi'}
+                          name={'provinceId'}
+                          placeholder={'Pilih Provinsi'}
+                          items={listProvince}
+                          required={true}
+                          keyLabel={'provinceName'}
+                          keyValue={'id'}
+                          onChange={e => handleChangeProvince(e, setFieldValue)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Kabupaten/Kota'}
+                          name={'regencyId'}
+                          placeholder={'Pilih Kabupaten/Kota'}
+                          items={listRegency}
+                          required={true}
+                          keyLabel={'regencyName'}
+                          keyValue={'id'}
+                          onChange={e => handleChangeRegency(e, setFieldValue)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Kecamatan'}
+                          name={'districtId'}
+                          placeholder={'Pilih Kecamatan'}
+                          items={listDistrict}
+                          required={true}
+                          keyLabel={'districtName'}
+                          keyValue={'id'}
+                          onChange={e => handleChangeDistrict(e, setFieldValue)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Kelurahan/Desa'}
+                          name={'villageId'}
+                          placeholder={'Pilih Kelurahan/Desa'}
+                          items={listVillage}
+                          required={true}
+                          keyLabel={'villageName'}
+                          keyValue={'id'}
                         />
                       </div>
                       <div className="mb-4">
@@ -184,43 +374,8 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           label={'Alamat'}
                           name={'alamat'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Alamat'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Provinsi'}
-                          name={'provinsi'}
-                          type={'text'}
-                          placeholder={'Provinsi'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Kabupaten/Kota'}
-                          name={'kabupatenKota'}
-                          type={'text'}
-                          placeholder={'Kabupaten/Kota'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Kecamatan'}
-                          name={'kecamatan'}
-                          type={'text'}
-                          placeholder={'Kecamatan'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Kelurahan/Desa'}
-                          name={'kelurahanDesa'}
-                          type={'text'}
-                          placeholder={'Kelurahan/Desa'}
                           required
                         />
                       </div>
@@ -229,6 +384,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           label={'RT/RW'}
                           name={'rtrw'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'RT/RW'}
                           required
                         />
@@ -238,6 +394,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           label={'Pekerjaan'}
                           name={'pekerjaan'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Pekerjaan'}
                           required
                         />
@@ -257,6 +414,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
                           label={'Kewarganegaraan'}
                           name={'kewarganegaraan'}
                           type={'text'}
+                          className={'uppercase'}
                           placeholder={'Kewarganegaraan'}
                           required
                         />
@@ -280,7 +438,7 @@ const Edit: NextPage<Props> = ({ ktp }) => {
   )
 }
 
-(Edit as PageWithLayoutType).layout = MainAdmin;
+(Edit as PageWithLayoutType).layout = MainAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { ktpId } = context.query;

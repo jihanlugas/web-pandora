@@ -4,14 +4,14 @@ import DateField from '@/components/formik/date-field';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
-import MainKtp from '@/components/layout/main-admin';
+import MainAuth from '@/components/layout/main-auth';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
 import Link from 'next/link';
 import { MdOutlineFilterList } from 'react-icons/md';
 import { VscTrash } from 'react-icons/vsc';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { BiFilterAlt, BiLayerPlus } from 'react-icons/bi';
+import { BiDetail, BiFilterAlt, BiLayerPlus, BiPlus } from 'react-icons/bi';
 import { RiPencilLine } from 'react-icons/ri';
 import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
@@ -22,6 +22,9 @@ import { displayActive, displayDate, displayMoney, displayNumber, displayPhoneNu
 import notif from '@/utils/notif';
 import { KtpView, PageKtp } from '@/types/ktp';
 import { PageInfo } from '@/types/pagination';
+import ModalDelete from '@/components/modal/modal-delete';
+import LoginContext from '@/stores/login-provider';
+import { USER_ROLE_ADMIN } from '@/utils/constant';
 
 type Props = {
 
@@ -30,6 +33,8 @@ type Props = {
 const Index: NextPage<Props> = () => {
 
   const router = useRouter();
+
+  const { login, setLogin } = useContext(LoginContext);
 
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
@@ -49,14 +54,17 @@ const Index: NextPage<Props> = () => {
     sortOrder: null,
     nik: '',
     nama: '',
+    jenisKelamin: '',
+    provinceId: '',
+    regencyId: '',
+    districtId: '',
+    villageId: '',
     alamat: '',
-    kelurahanDesa: '',
-    kecamatan: '',
-    kabupatenKota: '',
-    provinsi: '',
+    rtrw: '',
+    pekerjaan: '',
     statusPerkawinan: '',
     kewarganegaraan: '',
-    createBy: '',
+    createBy: login.role === USER_ROLE_ADMIN ? '' : login.userId,
   });
 
   const column: ColumnDef<KtpView>[] = [
@@ -74,7 +82,7 @@ const Index: NextPage<Props> = () => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/admin/ktp/[ktpId]', query: { ktpId: props.row.original.id } }} >
+          <Link href={{ pathname: '/ktp/[ktpId]', query: { ktpId: props.row.original.id } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
@@ -94,7 +102,13 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
       id: 'ttl',
@@ -111,15 +125,35 @@ const Index: NextPage<Props> = () => {
       },
       cell: (props) => {
         return (
-            <div className='w-full duration-300 hover:text-primary-500'>
-              {props.row.original.tempatLahir + ', ' + displayDate(props.row.original.tanggalLahir)}
-            </div>
+          <div className='w-full capitalize'>
+            {props.row.original.tempatLahir + ', ' + displayDate(props.row.original.tanggalLahir, 'DD MMMM YYYY')}
+          </div>
         )
       },
     },
     {
-      id: 'provinsi',
-      accessorKey: 'provinsi',
+      id: 'province_name',
+      accessorKey: 'provinceName',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Provinsi"}
+            </div>
+          </>
+        );
+      },
+      cell: (props) => {
+        return (
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'regency_name',
+      accessorKey: 'regencyName',
       header: (props) => {
         return (
           <>
@@ -129,25 +163,17 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
-    },
-    {
-      id: 'kabupaten_kota',
-      accessorKey: 'kabupatenKota',
-      header: (props) => {
+      cell: (props) => {
         return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Kabutapen/Kota"}
-            </div>
-          </>
-        );
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
       },
-      cell: props => props.getValue(),
     },
     {
-      id: 'kecamatan',
-      accessorKey: 'kecamatan',
+      id: 'district_name',
+      accessorKey: 'districtName',
       header: (props) => {
         return (
           <>
@@ -157,11 +183,17 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
     {
-      id: 'kelurahan_desa',
-      accessorKey: 'kelurahanDesa',
+      id: 'village_name',
+      accessorKey: 'villageName',
       header: (props) => {
         return (
           <>
@@ -171,27 +203,60 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
     },
-    // {
-    //   id: 'id',
-    //   header: 'Action',
-    //   enableSorting: false,
-    //   cell: (props) => {
-    //     return (
-    //       <>
-    //         <div className='flex justify-end items-center'>
-    //           <Link href={{ pathname: '/admin/ktp/[ktpId]/edit', query: { ktpId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
-    //             <RiPencilLine className='' size={'1.2rem'} />
-    //           </Link>
-    //           <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDelete(props.row.original.id)}>
-    //             <VscTrash className='' size={'1.2rem'} />
-    //           </button>
-    //         </div>
-    //       </>
-    //     );
-    //   },
-    // }
+    {
+      id: 'create_name',
+      accessorKey: 'createName',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Create Name"}
+            </div>
+          </>
+        );
+      },
+      cell: (props) => {
+        return (
+          <div className='w-full capitalize'>
+            {props.getValue() as string}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'id',
+      header: 'Action',
+      enableSorting: false,
+      cell: (props) => {
+        return (
+          <>
+            <div className='flex justify-end items-center'>
+              <Link href={{ pathname: '/ktp/[ktpId]', query: { ktpId: props.row.original.id } }} title='edit'>
+                <div className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded'>
+                  <BiDetail className='' size={'1.2rem'} />
+                </div>
+              </Link>
+              <Link href={{ pathname: '/ktp/[ktpId]/edit', query: { ktpId: props.row.original.id } }} title='edit'>
+                <div className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded'>
+                  <RiPencilLine className='' size={'1.2rem'} />
+                </div>
+              </Link>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 bg-gray-100 hover:shadow rounded' title='delete' onClick={() => toggleDelete(props.row.original.id)}>
+                <VscTrash className='' size={'1.2rem'} />
+              </button>
+            </div>
+          </>
+        );
+      },
+    }
   ];
 
   // const { isLoading, data, refetch } = useQuery(['ktp', pageRequestKtp], ({ queryKey }) => Api.get('/ktp/page', queryKey[1]), {});
@@ -257,7 +322,7 @@ const Index: NextPage<Props> = () => {
         show={showModalFilter}
         pageRequestKtp={pageRequestKtp}
         setPageRequestKtp={setPageRequestKtp}
-      />
+      /> */}
       <ModalDelete
         onClickOverlay={toggleDelete}
         show={showModalDelete}
@@ -268,7 +333,7 @@ const Index: NextPage<Props> = () => {
           <div className='mb-4'>Are you sure ?</div>
           <div className='text-sm mb-4 text-gray-700'>Data related to this ktp will also be deleted</div>
         </div>
-      </ModalDelete> */}
+      </ModalDelete>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
@@ -283,14 +348,16 @@ const Index: NextPage<Props> = () => {
               </div>
               <div className='flex'>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilter()}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 bg-gray-100 hover:shadow' onClick={() => toggleFilter()}>
                     <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/admin/ktp/new')}>
-                    <IoAddOutline className='' size={'1.2em'} />
-                  </button>
+                  <Link href={{ pathname: '/ktp/new' }}>
+                    <div className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 bg-gray-100 hover:shadow'>
+                      <BiPlus className='' size={'1.2em'} />
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -311,6 +378,6 @@ const Index: NextPage<Props> = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainKtp;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;

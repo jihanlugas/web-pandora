@@ -1,4 +1,4 @@
-import MainAdmin from '@/components/layout/main-admin';
+import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
 import { CreateUser } from '@/types/user';
 import PageWithLayoutType from '@/types/layout';
@@ -174,6 +174,6 @@ const New: NextPage<Props> = () => {
 
 
 
-(New as PageWithLayoutType).layout = MainAdmin;
+(New as PageWithLayoutType).layout = MainAuth;
 
 export default New;

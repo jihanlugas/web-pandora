@@ -1,4 +1,4 @@
-import MainAdmin from '@/components/layout/main-admin';
+import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
 import { CreateKtp } from '@/types/ktp';
 import PageWithLayoutType from '@/types/layout';
@@ -28,7 +28,7 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  nik: Yup.string().required("Required field"),
+  nik: Yup.number().typeError('Must be a number').required("Required field"),
   nama: Yup.string().required("Required field"),
   tempatLahir: Yup.string().required("Required field"),
   tanggalLahir: Yup.date().required("Required field"),
@@ -133,7 +133,7 @@ const New: NextPage<Props> = () => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push('/admin/ktp');
+            router.push('/ktp');
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -241,7 +241,7 @@ const New: NextPage<Props> = () => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/admin/ktp'}>
+              <Link href={'/ktp'}>
                 <div className='mr-4 hover:text-primary-500'>{'Ktp'}</div>
               </Link>
               <div className='mr-4'>
@@ -250,7 +250,7 @@ const New: NextPage<Props> = () => {
               <div className='mr-4'>{'New'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/admin/ktp'}>
+              <Link href={'/ktp'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -420,7 +420,7 @@ const New: NextPage<Props> = () => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Create'}
+                          label={'Save'}
                           disabled={isPending}
                           loading={isPending}
                         />
@@ -440,6 +440,6 @@ const New: NextPage<Props> = () => {
 
 
 
-(New as PageWithLayoutType).layout = MainAdmin;
+(New as PageWithLayoutType).layout = MainAuth;
 
 export default New;

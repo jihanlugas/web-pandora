@@ -5,7 +5,7 @@ import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
 import Head from 'next/head';
 import { Store } from 'react-notifications-component';
-import MainAdmin from '@/components/layout/main-admin';
+import MainAuth from '@/components/layout/main-auth';
 import Notif from '@/utils/notif';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -26,6 +26,6 @@ const Index = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainAdmin;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;
